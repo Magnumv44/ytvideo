@@ -1,10 +1,12 @@
 # YtVideo
 
-![Version](https://img.shields.io/badge/VERSION-1.8.9-0366d6.svg?style=for-the-badge)
-![Joomla!](https://img.shields.io/badge/Joomla!-3.7+-1A3867.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/VERSION-1.8.10-0366d6.svg?style=for-the-badge)
+![Joomla!](https://img.shields.io/badge/Joomla!-3.7_or_4_only-1A3867.svg?style=for-the-badge)
 ![Php](https://img.shields.io/badge/php-5.6+-8892BF.svg?style=for-the-badge)
 
-IMPORTANT! Release 1.8.9 is final, further support of this extension is not planned.
+IMPORTANT! Official release 1.8.9 is final, further support of this extension is not planned.
+
+**This fork is unofficial and has limited support.**
 
 _description in Russian [here](README.ru.md)_
 

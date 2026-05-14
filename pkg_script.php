@@ -1,47 +1,53 @@
 <?php
+
 /*
  * @package     Joomla.Package
  * @copyright   Copyright (C) Aleksey A. Morozov. All rights reserved.
+ * @copyright   Copyright (C) 2026 Vitaliy Magnum (https://www.magnumblog.space). Joomla 6 migration.
  * @license     GNU General Public License version 3 or later; see http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
-defined('_JEXEC') or die;
+\defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Version;
-use Joomla\CMS\Language\Text;
+use Joomla\CMS\Installer\InstallerAdapter;
+use Joomla\CMS\Installer\InstallerScriptInterface;
+use Joomla\DI\Container;
+use Joomla\DI\ServiceProviderInterface;
 
-class pkg_ytvideoInstallerScript
-{
-    function preflight($type, $parent)
+// Joomla 6 enforces version and php_minimum constraints from the manifest automatically.
+// No manual preflight checks are needed here.
+
+return new class implements ServiceProviderInterface {
+    public function register(Container $container): void
     {
-        if (strtolower($type) === 'uninstall') {
-            return true;
-        }
+        $container->set(
+            InstallerScriptInterface::class,
+            new class implements InstallerScriptInterface {
+                public function install(InstallerAdapter $adapter): bool
+                {
+                    return true;
+                }
 
-        $minJoomlaVersion = $parent->getManifest()->attributes()->version[0];
+                public function update(InstallerAdapter $adapter): bool
+                {
+                    return true;
+                }
 
-        if (!class_exists('Joomla\CMS\Version')) {
-            JFactory::getApplication()->enqueueMessage(JText::sprintf('J_JOOMLA_COMPATIBLE', JText::_($parent->getName()), $minJoomlaVersion), 'error');
-            return false;
-        }
+                public function uninstall(InstallerAdapter $adapter): bool
+                {
+                    return true;
+                }
 
-        $msg = '';
-        $ver = new Version();
-        $name = Text::_($parent->getName());
-        $minPhpVersion = $parent->getManifest()->php_minimum[0];
+                public function preflight(string $type, InstallerAdapter $adapter): bool
+                {
+                    return true;
+                }
 
-        if (version_compare($ver->getShortVersion(), $minJoomlaVersion, 'lt')) {
-            $msg .= Text::sprintf('PKG_SNIPPET_JOOMLA_COMPATIBLE', $name, $minJoomlaVersion);
-        }
-
-        if (version_compare(phpversion(), $minPhpVersion, 'lt')) {
-            $msg .= Text::sprintf('PKG_SNIPPET_PHP_COMPATIBLE', $name, $minPhpVersion);
-        }
-
-        if ($msg) {
-            Factory::getApplication()->enqueueMessage($msg, 'error');
-            return false;
-        }
+                public function postflight(string $type, InstallerAdapter $adapter): bool
+                {
+                    return true;
+                }
+            }
+        );
     }
-}
+};

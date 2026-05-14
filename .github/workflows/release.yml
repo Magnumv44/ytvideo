@@ -1,0 +1,56 @@
+name: Build Release Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Build sub-zips
+        run: |
+          mkdir -p packages
+
+          cd plg_content_ytvideo
+          zip -r ../packages/plg_content_ytvideo.zip . -x "*.DS_Store"
+          cd ..
+
+          cd plg_editors-xtd_ytvideobtn
+          zip -r ../packages/plg_editors-xtd_ytvideobtn.zip . -x "*.DS_Store"
+          cd ..
+
+      - name: Build package zip
+        run: |
+          zip -r ytvideo-joomla-6-${{ steps.version.outputs.VERSION }}.zip \
+            pkg_ytvideo.xml \
+            pkg_script.php \
+            language/ \
+            packages/ \
+            LICENSE \
+            README.md \
+            -x "*.DS_Store"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "YtVideo for Joomla 6 — v${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## Installation
+            Download `ytvideo-joomla-6-${{ steps.version.outputs.VERSION }}.zip` and install via **Extensions → Manage → Install**.
+
+            ## Requirements
+            - Joomla 6.0+
+            - PHP 8.3+
+          files: ytvideo-joomla-6-${{ steps.version.outputs.VERSION }}.zip
+          draft: false
+          prerelease: false

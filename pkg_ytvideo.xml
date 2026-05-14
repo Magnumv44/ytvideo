@@ -1,26 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<extension type="package" version="3.7" method="upgrade">
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="package" version="6.0" method="upgrade">
     <name>PKG_YTVIDEO</name>
     <packagename>ytvideo</packagename>
     <author>Aleksey A. Morozov</author>
     <authorEmail>alekvolsk@yandex.ru</authorEmail>
     <authorUrl>https://alekvolsk.pw</authorUrl>
-    <copyright>(C) Aleksey A. Morozov. All right reserved.</copyright>
+    <copyright>(C) Aleksey A. Morozov. All right reserved. 2026 Vitaliy Magnum (https://www.magnumblog.space). Joomla 6 migration.</copyright>
     <license>GNU General Public License version 3 or later; see http://www.gnu.org/licenses/gpl-3.0.txt</license>
     <creationDate>December 2022</creationDate>
     <packager>Aleksey A. Morozov</packager>
     <packagerurl>https://alekvolsk.pw</packagerurl>
-    <version>1.8.10</version>
+    <version>2.0.0</version>
     <description>PKG_YTVIDEO_DESC</description>
-    <php_minimum>5.6</php_minimum>
+    <php_minimum>8.3</php_minimum>
     <scriptfile>pkg_script.php</scriptfile>
     <languages>
         <language tag="en-GB">language/en-GB/en-GB.pkg_ytvideo.sys.ini</language>
         <language tag="ru-RU">language/ru-RU/ru-RU.pkg_ytvideo.sys.ini</language>
     </languages>
-    <files>
-        <folder type="plugin" id="ytvideo" group="content" method="upgrade" client="site">plg_content_ytvideo</folder>
-        <folder type="plugin" id="ytvideobtn" group="editors-xtd" method="upgrade" client="site">plg_editors-xtd_ytvideobtn</folder>
+    <files folder="packages">
+        <file type="plugin" id="ytvideo" group="content">plg_content_ytvideo.zip</file>
+        <file type="plugin" id="ytvideobtn" group="editors-xtd">plg_editors-xtd_ytvideobtn.zip</file>
     </files>
     <updateservers>
         <server type="extension" priority="2" name="PKG_YTVIDEO"><![CDATA[https://joomla-update.org/extensions/ytvideo/ytvideo_update.xml]]></server>

@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.7" type="plugin" group="editors-xtd" method="upgrade">
+<extension type="plugin" version="6.0" method="upgrade" group="editors-xtd">
     <name>PLG_EDITORS-XTD_YTVIDEOBTN</name>
     <author>Aleksey A. Morozov</author>
     <authorEmail>alekvolsk@yandex.ru</authorEmail>
     <authorUrl>https://alekvolsk.pw</authorUrl>
-    <copyright>(C) Aleksey A. Morozov. All right reserved.</copyright>
+    <copyright>(C) Aleksey A. Morozov. All right reserved. 2026 Vitaliy Magnum (https://www.magnumblog.space). Joomla 6 migration.</copyright>
     <license>GNU General Public License version 3 or later; see http://www.gnu.org/licenses/gpl-3.0.txt</license>
     <creationDate>July 2022</creationDate>
-    <version>1.8.10</version>
+    <version>2.0.0</version>
     <description>PLG_EDITORS-XTD_YTVIDEOBTN_XML_DESCRIPTION</description>
+    <namespace path="src">Joomla\Plugin\EditorsXtd\Ytvideobtn</namespace>
     <scriptfile>script.php</scriptfile>
     <files>
-        <filename plugin="ytvideobtn">ytvideobtn.php</filename>
+        <folder plugin="ytvideobtn">services</folder>
+        <folder>src</folder>
         <folder>tmpl</folder>
+        <folder>media</folder>
     </files>
     <languages folder="language">
         <language tag="en-GB">en-GB/en-GB.plg_editors-xtd_ytvideobtn.ini</language>

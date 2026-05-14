@@ -4,29 +4,38 @@
  * @package     Joomla.Plugin
  * @subpackage  Content.ytvideo
  * @copyright   Copyright (C) Aleksey A. Morozov. All rights reserved.
+ * @copyright   Copyright (C) 2026 Vitaliy Magnum (https://www.magnumblog.space). Joomla 6 migration.
  * @license     GNU General Public License version 3 or later; see http://www.gnu.org/licenses/gpl-3.0.txt
- *
- * @phpcs:disable PSR1.Classes.ClassDeclaration.MissingNamespace
  */
 
-use Joomla\CMS\Factory;
+namespace Joomla\Plugin\Content\Ytvideo\Extension;
+
+\defined('_JEXEC') or die;
+
+use Joomla\Filesystem\Exception\FilesystemException;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\FileSystem\Path;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Filesystem\Folder;
+use Joomla\Event\Event;
+use Joomla\Event\SubscriberInterface;
 
-// phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
-// phpcs:enable PSR1.Files.SideEffects
-
-class PlgContentYtvideo extends CMSPlugin
+final class Ytvideo extends CMSPlugin implements SubscriberInterface
 {
-    public function onContentPrepare($context, &$article, &$params, $page = 0)
+    public static function getSubscribedEvents(): array
     {
-        if ($context == 'com_finder.indexer') {
-            return false;
+        return [
+            'onContentPrepare' => 'onContentPrepare',
+        ];
+    }
+
+    public function onContentPrepare(Event $event): void
+    {
+        [$context, $article, $params, $page] = array_values($event->getArguments());
+
+        if ($context === 'com_finder.indexer') {
+            return;
         }
 
         if ($this->params->get('oldframes') == '1') {
@@ -65,7 +74,9 @@ class PlgContentYtvideo extends CMSPlugin
                         $match
                     );
                     if (count($match)) {
-                        $title = mb_strpos($_alllinks[2][$key], '://') === false ? strip_tags($_alllinks[2][$key]) : '';
+                        $title = mb_strpos($_alllinks[2][$key], '://') === false
+                            ? strip_tags($_alllinks[2][$key])
+                            : '';
                         $article->text = str_replace(
                             $res,
                             '{ytvideo https://youtube.com/watch?v=' . $match[1] . ($title ? '|' . $title : '') . '}',
@@ -84,23 +95,35 @@ class PlgContentYtvideo extends CMSPlugin
             }
         }
         if (!$results) {
-            return false;
+            return;
         }
 
-        $cachFolder = Path::clean(Factory::getConfig()->get('cache_path', JPATH_CACHE));
+        $app        = $this->getApplication();
+        $cachePath  = $app->get('cache_path', JPATH_CACHE);
+        $cachFolder = Path::clean($cachePath);
         $cachFolder = str_replace('administrator' . DIRECTORY_SEPARATOR, '', $cachFolder);
         $cachFolder = $cachFolder . DIRECTORY_SEPARATOR . 'plg_content_ytvideo' . DIRECTORY_SEPARATOR;
+
         if ($cachFolder && !is_dir($cachFolder)) {
-            Folder::create($cachFolder, 0755);
+            try {
+                Folder::create($cachFolder, 0755);
+            } catch (FilesystemException $e) {
+                $cachFolder = '';
+            }
         }
 
         $layout = PluginHelper::getLayoutPath('content', 'ytvideo');
         $format = $this->params->get('format', '16-9');
-        $mute = (int) $this->params->get('mute', 0);
+        $mute   = (int) $this->params->get('mute', 0);
 
-        Factory::getDocument()->addScriptDeclaration('window.ytvideo_mute = ' . $mute);
-
-        HTMLHelper::script('plugins/content/ytvideo/assets/ytvideo.js', [], ['options' => ['version' => 'auto']]);
+        /** @var \Joomla\CMS\WebAsset\WebAssetManager $wa */
+        $wa = $app->getDocument()->getWebAssetManager();
+        $wa->addInlineScript('window.ytvideo_mute = ' . $mute . ';');
+        $wa->registerAndUseScript(
+            'plg_content_ytvideo.script',
+            'plugins/content/ytvideo/assets/ytvideo.js',
+            ['version' => 'auto']
+        );
 
         if ($this->params->get('includes') == '1') {
             $css = str_replace(JPATH_ROOT, '', dirname($layout) . '/' . basename($layout, '.php') . '.css');
@@ -108,7 +131,11 @@ class PlgContentYtvideo extends CMSPlugin
                 $css = 'plugins/content/ytvideo/assets/ytvideo.css';
             }
             $css = str_replace('\\', '/', $css);
-            HTMLHelper::stylesheet($css, [], ['options' => ['version' => 'auto']]);
+            $wa->registerAndUseStyle(
+                'plg_content_ytvideo.style',
+                $css,
+                ['version' => 'auto']
+            );
         }
 
         foreach ($results[1] as $key => $link) {
@@ -119,7 +146,11 @@ class PlgContentYtvideo extends CMSPlugin
 
             $ratio = $format;
             if (count($tmp) && isset($tmp[1])) {
-                $r_tmp = str_replace([':', ' ', '.'], ['-', '', ''], preg_replace('/[0-9.]-:[0-9]/', '', $tmp[1]));
+                $r_tmp = str_replace(
+                    [':', ' ', '.'],
+                    ['-', '', ''],
+                    preg_replace('/[0-9.]-:[0-9]/', '', $tmp[1])
+                );
                 if (
                     in_array($r_tmp, [
                         '4-3', '4:3',
@@ -130,7 +161,7 @@ class PlgContentYtvideo extends CMSPlugin
                         '199-9', '19.9:9',
                         '235-1', '2.35:1',
                         '255-1', '2.55:1',
-                        '27-1', '2.7:1'
+                        '27-1', '2.7:1',
                     ])
                 ) {
                     $ratio = $r_tmp;
@@ -154,7 +185,7 @@ class PlgContentYtvideo extends CMSPlugin
 
             if (count($match) > 1) {
                 $resultImage = false;
-                $id = $match[1];
+                $id          = $match[1];
                 $cachedImage = $cachFolder . $id . '.webp';
                 if (!file_exists($cachedImage)) {
                     $cachedImage = $cachFolder . $id . '.jpg';
@@ -165,7 +196,7 @@ class PlgContentYtvideo extends CMSPlugin
                             break;
                         }
                         foreach (['.webp', '.jpg'] as $ext) {
-                            $image = 'https://i.ytimg.com/vi/' . $id . '/' . $img . $ext;
+                            $image   = 'https://i.ytimg.com/vi/' . $id . '/' . $img . $ext;
                             $headers = get_headers($image);
                             if (is_array($headers) && strpos($headers[0], ' 200') > 0) {
                                 $buffer = file_get_contents($image);
@@ -201,6 +232,7 @@ class PlgContentYtvideo extends CMSPlugin
                 $article->text = str_replace($results[0][$key], ob_get_clean(), $article->text);
             }
         }
+
         $article->text = str_replace(
             ['<p><div', '</div></p>', "</div>\n</p>", '<p></p>'],
             ['<div', '</div>', '</div>', ''],

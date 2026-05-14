@@ -1,0 +1,16 @@
+# Build artifacts
+*.zip
+packages/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# PHP
+vendor/
+composer.lock

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updates>
+    <update>
+        <name>YtVideo package</name>
+        <element>pkg_ytvideo</element>
+        <type>package</type>
+        <version>2.0.1</version>
+        <infourl title="YtVideo package">https://github.com/Magnumv44/ytvideo</infourl>
+        <downloads>
+            <downloadurl type="full" format="zip">https://www.magnumblog.space/extensions/ytvideo/ytvideo-joomla-6-2_0_1.zip</downloadurl>
+        </downloads>
+        <tags>
+            <tag>stable</tag>
+        </tags>
+        <maintainer>Vitaliy Magnum</maintainer>
+        <maintainerurl>https://www.magnumblog.space/</maintainerurl>
+        <php_minimum>8.3</php_minimum>
+        <targetplatform name="joomla" version="(6\.(0|1|2|3|4|5|6|7|8|9))"/>
+        <client>0</client>
+    </update>
+</updates>

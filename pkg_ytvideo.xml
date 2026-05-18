@@ -10,14 +10,14 @@
     <creationDate>December 2022 / Joomla 6 fork: May 2026</creationDate>
     <packager>Vitaliy Magnum</packager>
     <packagerurl>https://www.magnumblog.space</packagerurl>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <description>PKG_YTVIDEO_DESC</description>
     <php_minimum>8.3</php_minimum>
     <scriptfile>pkg_script.php</scriptfile>
     <languages>
-        <language tag="en-GB">language/en-GB/en-GB.pkg_ytvideo.sys.ini</language>
-        <language tag="ru-RU">language/ru-RU/ru-RU.pkg_ytvideo.sys.ini</language>
-        <language tag="uk-UA">language/uk-UA/uk-UA.pkg_ytvideo.sys.ini</language>
+        <language tag="en-GB">language/en-GB/pkg_ytvideo.sys.ini</language>
+        <language tag="ru-RU">language/ru-RU/pkg_ytvideo.sys.ini</language>
+        <language tag="uk-UA">language/uk-UA/pkg_ytvideo.sys.ini</language>
     </languages>
     <files folder="packages">
         <file type="plugin" id="ytvideo" group="content">plg_content_ytvideo.zip</file>

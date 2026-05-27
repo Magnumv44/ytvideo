@@ -1,6 +1,6 @@
 # YtVideo for Joomla 6
 
-![Version](https://img.shields.io/badge/VERSION-2.0.0-0366d6.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/VERSION-2.0.2-0366d6.svg?style=for-the-badge)
 ![Joomla!](https://img.shields.io/badge/Joomla!-6.0+-1A3867.svg?style=for-the-badge)
 ![PHP](https://img.shields.io/badge/PHP-8.3+-8892BF.svg?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-GPL_v3-green.svg?style=for-the-badge)
